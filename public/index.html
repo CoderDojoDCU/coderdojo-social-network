@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<style rel="stylesheet" type="text/css">
+			body {
+				background: black;
+				color: white;
+				font-family: Tahoma;
+			}
+
+			h1 {
+				color: pink;
+			}
+
+			div.code {
+				width: 300px;
+				padding: 5px;
+				border: 1px solid black;
+				background: lightgray;
+				color: navy;
+			}
+
+			div.url {
+				width: 300px;
+				padding: 5px;
+				border: 1px solid orange;
+				background: navy;
+				color: lightgray;
+			}
+
+			.input {
+				color: gray;
+				font-size: 15px;
+				margin: 5px;
+				vertical-align: top;
+				width: 500px;
+			}
+
+			div.inputDiv {
+				padding-left: 30px;
+				width: 100%;
+				color:pink;
+			}
+
+			button {
+				background: green;
+				padding: 10px;
+				color: white;
+				font-size: 12px;
+				border: 1px solid white;
+			}
+
+			span.chatname {
+				font-size: italic;
+				color: red;
+				font-size: 14px;
+			}
+
+			span.message {
+				font-size: bold;
+				color: gray;
+				font-size: 18px;
+			}
+		</style>
+	</head>
+	<script src="jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	  var socket = io.connect('http://192.168.1.239:3000');
+	  
+	  socket.on('chat', function (chatData) {
+	    displayChat(chatData.name, chatData.chat);
+	  });
+
+	  function send() {
+	  	var name = $("#name").val();
+	  	var chat = $("#chat").val();
+	  	socket.emit('chat', { name: name, chat: chat });
+ 		displayChat(name, chat);
+	  }
+
+	  function displayChat(from, message) {
+	  	$( "#socialchat" ).prepend( "<div id='chatmessage'><span class='chatname'>"+from +" says "
+	  	  + " </span><br/> " 
+	  		+ "<span class='message'>"+message+"</span>"
+	  		+"</div>" );
+	  }
+	</script>
+	<body>
+		<h1>CoderDojo Social Network</h1>
+		<div class="inputDiv">
+			<input id="name" type="text"  placeholder="name" class="input"></input>
+		</div>
+		<div class="inputDiv">
+			<textarea rows="5" cols="50" id="chat" placeholder="chat here"  class="input"></textarea>
+		</div>
+		<div class="buttons">
+			<button id="send" onclick="send()">Send</button>
+		</div>
+		<hr/>
+		<h2>Social Chat</h2>
+		<div id="socialchat"></div>
+		
+	</body>
+</html>
